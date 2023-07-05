@@ -41,7 +41,7 @@
               >
                 <span class="sr-only">Open user menu</span>
                 <img
-                    v-if="auth.user && auth.user.user_metadata && auth.user.user_metadata.picture"
+                    v-if="haveUser"
                   class="w-8 h-8 rounded-full"
                   :src="auth.user.user_metadata.picture"
                   alt="user photo"
@@ -55,13 +55,13 @@
             >
               <div class="px-4 py-3" role="none">
                 <p class="text-sm text-gray-900 dark:text-white" role="none">
-                  {{auth.user.user_metadata.full_name}}
+                  {{haveUser ? auth.user.user_metadata.full_name : ''}}
                 </p>
                 <p
                   class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                   role="none"
                 >
-                  {{auth.user.user_metadata.email}}
+                  {{haveUser ? auth.user.user_metadata.email : ''}}
                 </p>
               </div>
               <ul class="py-1" role="none">
@@ -119,6 +119,9 @@ export default {
                 this.$emit('update:expand',newexpand)
             }
         },
+        haveUser(){
+          return this.auth.user && this.auth.user.user_metadata && this.auth.user.user_metadata.picture
+        }
     },
     async mounted(){
          initFlowbite();

@@ -12,7 +12,7 @@
           <p
             href="#"
             @click="curExpand = !curExpand"
-            :class="[curExpand ? 'w-60 justify-end' : 'w-12 justify-start']"
+            :class="[curExpand ? 'w-60 justify-end' : 'w-0 invisible sm:visible sm:w-12 justify-start hidden']"
             class="transition-all delay=100 cursor-pointer flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
           >
           <transition>
@@ -63,7 +63,7 @@ export default {
             }
         },
         width(){
-            return this.curExpand ? 'w-64' : 'w-14'
+            return this.curExpand ? 'w-64' : 'sm:w-14 w-0'
         }
     },
     methods:{
