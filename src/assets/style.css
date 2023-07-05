@@ -1,0 +1,20 @@
+@font-face {
+    font-family: Hepta Bold;
+    src: url('./fontes/HeptaSlab-Bold.woff2');
+}
+@font-face {
+    font-family: Hepta Extra Bold;
+    src: url('./fontes/HeptaSlab-ExtraBold.woff2');
+}
+@font-face {
+    font-family: Hepta Black;
+    src: url('./fontes/HeptaSlab-Black.woff2');
+}
+@font-face {
+    font-family: Hepta;
+    src: url('./fontes/HeptaSlab-Regular.woff2');
+}
+@font-face {
+    font-family: Hepta Light;
+    src: url('./fontes/HeptaSlab-Light.woff2');
+}
