@@ -31,11 +31,12 @@
           </div>
         </div>
         <div class="flex items-center">
-          <div class="flex items-center ml-3">
+          <button class="flex items-center ml-3 user_menu_button relative" 
+                @click="openMenuUser = !openMenuUser" @blur="openMenuUser = false">
             <div>
               <button
                 type="button"
-                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                class="pointer-events-none flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                 aria-expanded="false"
                 data-dropdown-toggle="dropdown-user"
               >
@@ -50,48 +51,48 @@
               </button>
             </div>
             <div
-              class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
+            ref="user_menu"
+              class="user_menu z-50  absolute  right-0 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
               id="dropdown-user"
             >
               <div class="px-4 py-3" role="none">
-                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                <p class="text-left text-sm text-gray-900 dark:text-white" role="none">
                   {{haveUser ? auth.user.user_metadata.full_name : ''}}
                 </p>
                 <p
-                  class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
+                  class="text-left text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                   role="none"
                 >
                   {{haveUser ? auth.user.user_metadata.email : ''}}
                 </p>
               </div>
-              <ul class="py-1" role="none">
+              <ul class="py-1" >
                 <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    >Configurações da Conta</a
+                  <p
+                    class="text-left cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    @click="$router.push({name:'pro'})"
+                    >Configurações da Conta</p
                   >
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    >Seja Pro</a
+                  <p
+                    class="text-left cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                  
+                    @click="$router.push({name:'pro'})"
+                    >Seja Pro</p
                   >
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    >Sair</a
+                  <p
+                    class="text-left cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                    @click="auth.logout"
+
+                    >Sair</p
                   >
                 </li>
               </ul>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </div>
@@ -99,7 +100,6 @@
 </template>
 
 <script>
-import { initFlowbite } from 'flowbite'
 import { useAuth } from '@/store/auth';
 export default {
     props:['expand'],
@@ -107,7 +107,8 @@ export default {
     data(){
         const auth = useAuth();
         return {
-            auth
+            auth,
+            openMenuUser:false
         }
     },
     computed:{
@@ -124,11 +125,27 @@ export default {
         }
     },
     async mounted(){
-         initFlowbite();
         await this.auth.getUser()
+    },
+    watch:{
+      openMenuUser(newvalue){
+        console.log(newvalue)
+        this.$refs.user_menu.classList[newvalue ? 'add' : 'remove']('user_menu_active')
+      }
     }
 };
 </script>
 
-<style>
+<style scoped>
+.user_menu_active {
+ top:100% !important;
+ opacity: 1 !important;
+ visibility: visible !important;
+}
+.user_menu {
+  top:90%;
+ opacity: 0;
+ visibility: hidden;
+ transition: .3s ease;
+}
 </style>

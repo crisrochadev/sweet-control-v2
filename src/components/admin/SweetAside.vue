@@ -6,7 +6,7 @@
     :class="[width]"
     aria-label="Sidebar"
   >
-    <div class="h-full pb-4 overflow-y-auto bg-white dark:bg-gray-800" :class="[expand ? 'px-3' : 'px-0 sm:p-3']">
+    <div class="h-full pb-4 overflow-y-auto overflow-x-hidden bg-white dark:bg-gray-800" :class="[expand ? 'px-3' : 'px-0 sm:p-3']">
       <ul class="space-y-2 font-medium">
         <li class="hidden sm:block">
           <p

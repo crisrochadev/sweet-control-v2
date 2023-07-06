@@ -34,6 +34,31 @@ const routes = [
         name: 'dash',
         path: '',
         component: () => import('../pages/admin/Home.vue'),
+      },
+      {
+        name: 'expenses',
+        path: 'expenses',
+        component: () => import('../pages/admin/expensesPage.vue'),
+      },
+      {
+        name: 'notify',
+        path: 'notify',
+        component: () => import('../pages/admin/notifyPage.vue'),
+      },
+      {
+        name: 'recalc',
+        path: 'recalc',
+        component: () => import('../pages/admin/recalcPage.vue'),
+      },
+      {
+        name: 'pro',
+        path: 'pro',
+        component: () => import('../pages/admin/proPage.vue'),
+      },
+      {
+        name: 'user',
+        path: 'user',
+        component:() => import('../pages/admin/acountSetting.vue')
       }
     ]
   },
