@@ -2,23 +2,16 @@ import moment from 'moment';
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router';
 
-export const useExpenses = defineStore('expenses', {
+export const useDates = defineStore('dates', {
     state() {
         const $router = useRouter();
         moment.locale('pt-BR')
         return {
             $router,
-            expenses:{
-
-            },
-            totalIncoming:1254.36,
-            totalExpenses:1380.00,
             date:moment()
         }
     },
     getters: {
-        double: state => state.count * 2,
-        totalDiff:state => state.totalIncoming - state.totalExpenses,
         currentMonth:state => ({
             text:state.date.format('MMMM'),
             number:state.date.format('MM')
@@ -56,9 +49,6 @@ export const useExpenses = defineStore('expenses', {
         })
     },
     actions: {
-        getExpenses(){
-            
-        },
         changeMonth(type,qtd){
             if(type === 'return') {
                 this.date = moment(Date.now());

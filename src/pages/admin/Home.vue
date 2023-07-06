@@ -1,4 +1,7 @@
 <template>
+  <div>
+    <change-dates />
+  </div>
   <values-view />
   <div
     class="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800"
@@ -217,9 +220,10 @@
 </template>
 
 <script>
-import ValuesView from '@/components/admin/ValuesView.vue';
+import ValuesView from "@/components/admin/ValuesView.vue";
+import ChangeDates from "@/components/admin/DateButtons.vue";
 export default {
-  components:{ValuesView}
+  components: { ValuesView, ChangeDates },
 };
 </script>
 
