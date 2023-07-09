@@ -1,11 +1,11 @@
 <template>
-  <div class="grid grid-cols-3 grid-rows-1 gap-4 mb-4">
+  <div class="grid grid-cols-3 grid-rows-1 gap-1 sm:gap-4 mb-4">
     <sweet-box>
       <template #header>
-        <h2 class="uppercase font-hepta-bold text-gray-600">Receita</h2>
+        <h2 class="uppercase font-hepta-bold text-gray-600 text-xs sm:text-lg">Receita</h2>
       </template>
       <template #content>
-        <h2 class="uppercase font-hepta-black text-blue-600 text-2xl">
+        <h2 class="uppercase font-hepta-black text-blue-600 text-md sm:text-2xl">
           <span class="text-xs text-gray-600">R$</span
           >{{ expenses.totalIncoming.toFixed(2).toLocaleString("pt-BR") }}
         </h2>
@@ -13,10 +13,10 @@
     </sweet-box>
     <sweet-box>
       <template #header>
-        <h2 class="uppercase font-hepta-bold text-gray-600">Despesas</h2>
+        <h2 class="uppercase font-hepta-bold text-gray-600 text-xs sm:text-lg">Despesas</h2>
       </template>
       <template #content>
-        <h2 class="uppercase font-hepta-black text-purple-800 text-2xl">
+        <h2 class="uppercase font-hepta-black text-purple-800 text-md sm:text-2xl">
           <span class="text-xs text-gray-600">R$</span
           >{{ expenses.totalExpenses.toFixed(2).toLocaleString("pt-BR") }}
         </h2>
@@ -24,11 +24,11 @@
     </sweet-box>
     <sweet-box>
       <template #header>
-        <h2 class="uppercase font-hepta-bold text-gray-600">Saldo</h2>
+        <h2 class="uppercase font-hepta-bold text-gray-600 text-xs sm:text-lg">Saldo</h2>
       </template>
       <template #content>
         <h2
-          class="uppercase font-hepta-black text-2xl"
+          class="uppercase font-hepta-black text-md sm:text-2xl"
           :class="[expenses.totalDiff > 0 ? 'text-green-600' : 'text-red-600']"
         >
           <span class="text-xs text-gray-600">R$</span

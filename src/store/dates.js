@@ -1,14 +1,17 @@
 import moment from 'moment';
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router';
+import { useExpenses } from './expenses';
 
 export const useDates = defineStore('dates', {
     state() {
+        const expenses = useExpenses();
         const $router = useRouter();
         moment.locale('pt-BR')
         return {
             $router,
-            date:moment()
+            date:moment(),
+            expenses
         }
     },
     getters: {
@@ -46,15 +49,17 @@ export const useDates = defineStore('dates', {
             month:moment(Date.now()).format('MM'),
             longmonth:moment(Date.now()).format('MMMM'),
             year:moment(Date.now()).format('YYYY'),
+            date:moment(Date.now())
         })
     },
     actions: {
-        changeMonth(type,qtd){
+        async changeMonth(type,qtd){
             if(type === 'return') {
                 this.date = moment(Date.now());
                 return;
             }
             this.date = moment(this.date)[type](qtd,'months');
+            await this.expenses.getExpenses()
         }
     },
 })

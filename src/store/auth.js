@@ -10,7 +10,8 @@ export const useAuth = defineStore('auth', {
             $router,
             user: null,
             session: {},
-            loading:false
+            loading:false,
+            userId:useStorage("@sweet-control-user-id",null)
         }
     },
     getters: {
@@ -26,6 +27,8 @@ export const useAuth = defineStore('auth', {
         },
         setUserSession(session){
             this.user = session.user;
+            console.log(session)
+            this.userId = session.user.id;
             Object.entries(session).forEach(([key,value]) => {
                 if(key !== 'user'){
                     this.session[key] = value;
@@ -35,6 +38,7 @@ export const useAuth = defineStore('auth', {
         async logout(){
             this.loading = true;
             await supabase.auth.signOut();
+            this.userId = null;
             this.loading = false;
             this.$router.push('/')
         },
