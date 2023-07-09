@@ -4,11 +4,11 @@
   <sweet-aside :menu="menu" v-model:expand="expand" />
 
   <div
-    class="p-4 transition-all delay-100"
+    class="p-1 transition-all delay-100"
     :class="[expand ? 'sm:ml-64' : 'sm:ml-14']"
   >
     <div
-      class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14"
+      class="p-1  mt-14"
     >
       <router-view :key="$route.path" />
     </div>
