@@ -44,6 +44,12 @@ export const useExpenses = defineStore('expenses', {
 
 
             }
+        },
+        async updateFinance(type,value,id){
+            const { data,error } = await supabase.from('allcontrol').update({[type]:value}).eq('id',id).select();
+            if(!error){
+                await this.getExpenses();
+            }
         }
     },
 })

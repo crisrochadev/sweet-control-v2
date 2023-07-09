@@ -1,49 +1,52 @@
 <template>
-  <div class="flex justify-between">
-    <add-new />
-    <change-dates />
+  <div class="w-full sticky top-0">
+    <div class="flex justify-between">
+      <add-new />
+      <change-dates />
+    </div>
+    <values-view />
   </div>
-  <values-view />
 
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg pb-24">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-      <!-- <thead
-        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-      >
-        <tr>
-          <th scope="col" class="px-3 py-3">
-            {{ type === "expense" ? "Pago" : "Recebido" }}
-          </th>
-          <th scope="col" class="px-3 py-3 text-left">Titulo</th>
-          <th scope="col" class="px-6 py-3">Valor</th>
-        </tr>
-        <tr class="px-3 py-3">
-          <th scope="col" class="py-3 text-center">Vencimento</th>
-          <th scope="col" class="py-3 text-center">Comentário</th>
-          <th scope="col" class="py-3 text-center">Ação</th>
-        </tr>
-      </thead> -->
-      <tbody class="">
-        <template v-for="finance in finances" :key="finance.id">
-          <tr
-            class="bg-white hover:bg-gray-100 transition-colors delay-100 cursor-pointer"
+  <div class="relative overflow-x-auto pb-24">
+    <div
+      class="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded"
+    >
+      <template v-for="finance in finances" :key="finance.id">
+        <div
+          class="bg-white ml-4 shadow-md sm:rounded-lg rounded cursor-pointer relative item my-4 border"
+        >
+          <div
+            class="border w-6 h-6 absolute -top-3 -left-3 flex justify-center items-center rounded-full p-0 z-50 bg-white"
           >
-            <td class="px-3 py-2" v-if="Object.keys(finance).some" rowspan="2">
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  v-model="finance.completed"
-                  class="sr-only peer"
-                />
-                <div
-                  class="w-8 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-                ></div>
-              </label>
-            </td>
-            <td class="px-6 py-2">
+            <span
+              class="material-icons-outlined"
+              :class="[
+                finance.completed
+                  ? 'text-green-300'
+                  : itsOverdue(finance)
+                  ? 'text-red-300'
+                  : 'text-yellow-300',
+              ]"
+              >{{
+                finance.completed
+                  ? "done"
+                  : itsOverdue(finance)
+                  ? "error"
+                  : "schedule"
+              }}</span
+            >
+          </div>
+          <div class="w-full flex justify-between items-center relative">
+            <div
+              class="px-6 py-2 uppercase flex-1"
+              :class="[finance.completed ? 'line-through' : '']"
+            >
               {{ finance.title }}
-            </td>
-            <td class="px-6 py-2">
+            </div>
+            <div
+              class="px-6 py-2 flex justify-end font-hepta-extra-bold"
+              :class="[finance.completed ? 'line-through' : '']"
+            >
               {{
                 finance.ammount.toLocaleString("pt-BR", {
                   style: "currency",
@@ -52,67 +55,71 @@
                   minimumFractionDigits: 2,
                 })
               }}
-            </td>
-            <td class="text-center py-2">
-              {{ dateFormated(finance.duedate) }}
-            </td>
-            <td
-              class="text-center py-2"
-              v-if="Object.keys(finance).some"
-              rowspan="2"
+            </div>
+            <div
+              @click="(e) => openMenu(e, finance)"
+              class="hover:bg-gray-100 transition-colors delay-100 px-2 menu_button"
             >
+              <span class="material-icons-outlined">more_horiz</span>
+            </div>
+            <transition>
               <button
-                @click="(e) => openMenu(e, finance)"
-                class="text-black relative bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                type="button"
+                v-if="currentMenu === finance.id"
+                :ref="`menu_${finance.id}`"
+                class="menu z-10 top-[calc(_100%_-_6px)] right-0 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
               >
-                <span class="material-icons-outlined"> more_horiz </span>
-
-                <!-- Dropdown menu -->
-                <transition>
-                  <button
-                    v-if="currentMenu === finance.id"
-                    :ref="`menu_${finance.id}`"
-                    class="z-10 top-[calc(_100%_+_3px)] right-0 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                <ul
+                  class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                  aria-labelledby="dropdownDividerButton"
+                >
+                  <li
+                    @click="
+                      updateFinance('completed', !finance.completed, finance)
+                    "
+                    class="w-full flex justify-start gap-4 items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                   >
-                    <ul
-                      class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                      aria-labelledby="dropdownDividerButton"
+                    <span class="material-icons-outlined">{{
+                      finance.completed ? 'close' : 'done'}}</span>
+                    <span>
+                      {{
+                        type === "expense"
+                          ? finance.completed
+                            ? "Reabrir"
+                            : "Pagar"
+                          : finance.completed
+                          ? "Reabrir"
+                          : "Receber"
+                      }}</span
                     >
-                      <li
-                        class="w-full flex justify-start gap-4 items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        <span class="material-icons-outlined">edit</span>
-                        <span>Editar</span>
-                      </li>
-                      <li
-                        class="w-full flex justify-start gap-4 items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        <span class="material-icons-outlined">delete</span>
-                        <span>Excluir</span>
-                      </li>
-                    </ul>
-                  </button>
-                </transition>
+                  </li>
+                  <li
+                    class="w-full flex justify-start gap-4 items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  >
+                    <span class="material-icons-outlined">edit</span>
+                    <span>Editar</span>
+                  </li>
+                  <li
+                    class="w-full flex justify-start gap-4 items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  >
+                    <span class="material-icons-outlined">delete</span>
+                    <span>Excluir</span>
+                  </li>
+                </ul>
               </button>
-            </td>
-            <!-- <td class="px-6 py-2 border w-6"  @click="(e) => openMore(e, finance)">
-              <button>
-                <span class="material-icons-outlined transition-transform delay-100" :class="[more === finance.id ? 'rotate-180' : '']">expand_more</span>
-              </button>
-            </td> -->
-          </tr>
-          <tr
-            class="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-            :ref="`more_${finance.id}`"
-          >
-            <td class="text-center py-2" colspan="3">
-              <input v-model="finance.comment" class="border w-full"/>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
+            </transition>
+          </div>
+
+          <div class="text-center py-2" style="grid-column: 2/4">
+            <input
+              v-model="finance.comment"
+              class="border w-full"
+              v-if="finance.comment && finance.comment.length > 0"
+            />
+            <div v-else>Adicionar comentário</div>
+          </div>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -152,6 +159,7 @@ export default {
   async mounted() {
     await this.expenses.getExpenses();
     console.log(this.expenses.finances);
+    document.addEventListener("click", (e) => this.removeMenus(e));
   },
   methods: {
     openMenu(e, item) {
@@ -180,9 +188,32 @@ export default {
     dateFormated(date) {
       return moment(date).format("DD/MM/YYYY");
     },
+    itsOverdue(item) {
+      let currentDate = parseInt(moment().format("DD"));
+      let itemDate = parseInt(moment(item.date).format("DD"));
+      return itemDate > currentDate;
+    },
+    removeMenus(e) {
+      let menus = document.querySelectorAll(".menu");
+      let menu_buttons = document.querySelectorAll(".menu_button");
+      Array.from(menus).forEach((menu, index) => {
+        if (
+          menu &&
+          !menu.contains(e.target) &&
+          Array.from(menu_buttons)[index] &&
+          !Array.from(menu_buttons)[index].contains(e.target)
+        ) {
+          this.currentMenu = null;
+        }
+      });
+    },
+    async updateFinance(type, value, item) {
+      await this.expenses.updateFinance(type, value, item.id);
+      this.currentMenu = null;
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 </style>
